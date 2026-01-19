@@ -2,8 +2,8 @@ services:
   web:
     build: .
     # Keep these commented if using the Domains tab for access
-    # ports:
-    #   - "8031:8031" 
+    ports:
+      - "8031:8031" 
     volumes:
       - ./php/www:/var/www/html
     depends_on:
