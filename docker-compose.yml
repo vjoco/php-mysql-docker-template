@@ -24,8 +24,8 @@ services:
       - db_data:/var/lib/mysql
       - ./mariadb/conf.d:/etc/mysql/conf.d
       - ./mariadb/init:/docker-entrypoint-initdb.d
-    ports:
-      - "3306:3306"
+ #   ports:
+ #     - "3306:3306"
     networks:
       - lamp-network
     command: >
