@@ -6,6 +6,11 @@ services:
       - ./src:/var/www
     networks:
       - php-network
+    healthcheck:
+      test: ["CMD", "php-fpm-healthcheck"] # or just ["CMD", "cgi-fcgi", "-bind", "-connect", "127.0.0.1:9000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # MariaDB Database (Optimized for 1GB RAM)
   db:
