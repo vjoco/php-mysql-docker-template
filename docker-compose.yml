@@ -1,5 +1,4 @@
 services:
-  # PHP Application
   app:
     build: .
     volumes:
