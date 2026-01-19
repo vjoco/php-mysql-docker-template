@@ -17,9 +17,9 @@ services:
       timeout: 10s
       retries: 3
 
-  networks:
-    - default
-    - easypanel-network    
+    networks:
+      - default
+      - easypanel-network    
 
   db:
     image: mariadb:10.11-jammy
