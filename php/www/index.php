@@ -5,7 +5,7 @@ $password = "webpassword";
 $dbname = "webapp";
 
 try {
-    $pdo = new PDO("mysql:host=$servername;port=3307;dbname=$dbname", $username, $password);
+    $pdo = new PDO("mysql:host=$servername;port=3317;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db_status = "Connected successfully";
     $db_class = "success";
