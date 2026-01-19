@@ -11,9 +11,10 @@ WORKDIR /var/www/html
 
 # Copy custom Apache configuration
 COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY apache/ports.conf /etc/apache2/ports.conf
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html
 
-EXPOSE 80
+EXPOSE 8011
