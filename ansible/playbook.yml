@@ -1,0 +1,83 @@
+- name: Install latest version of docker and docker compose and setting proxy for that
+  hosts: webservers
+  become: true
+  vars:
+    ubuntu_release: <UBUNTU_RELEASE>  # Edit this var
+  tasks:
+    - name: Uninstall old versions of docker
+      apt:
+        pkg:
+          - docker
+          - docker-engine
+          - docker.io
+          - containerd
+          - runc
+        state: absent
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - gnupg
+          - lsb-release
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: yes
+
+    - name: Add docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu {{ ubuntu_release }} stable
+        state: present
+
+    - name: Update apt and install docker and docker compose
+      apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        update_cache: yes
+
+    - name: Create directory for proxy configuration
+      file:
+        path: /etc/systemd/system/docker.service.d/
+        state: directory
+        mode: 0775
+
+    - name: Copy proxy configuration for docker
+      copy:
+        src: ./proxy.conf
+        dest: /etc/systemd/system/docker.service.d/proxy.conf
+        mode: 0775
+
+    - name: Restart daemon_reload
+      command: systemctl daemon-reload
+
+    - name: restart docker.servive
+      service:
+        name: docker
+        state: restarted
+
+- name: Run LEMP stack docker compose file
+  hosts: webservers
+  become: true
+  vars:
+    project_path: <PUT_ABSOLUTE_PATH_HERE>  # Edit this var
+  tasks:
+    - name: Copy all LEMP stack files to server
+      synchronize:
+        src: "{{ project_path }}"
+        dest: /root
+
+    - name: Run compose file
+      command: docker compose -f /root/ComposeDockerNginxPHP/docker-compose.yml up -d
