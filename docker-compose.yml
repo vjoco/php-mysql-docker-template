@@ -2,7 +2,7 @@ services:
   web:
     build: .
     ports:
-      - "${WEB_PORT}:${WEB_PORT}"
+      - "8011:80"
     volumes:
       - ./php/www:/var/www/html
     depends_on:
