@@ -26,6 +26,7 @@ services:
   # Nginx Web Server
   nginx:
     image: nginx:alpine
+    container_name: nginx
     ports:
       - "8090:8090"
     volumes:
