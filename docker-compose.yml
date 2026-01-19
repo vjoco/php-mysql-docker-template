@@ -1,67 +1,45 @@
 version: '3.8'
 
 services:
-  php:
-    image: php:${PHP_IMAGE_TAG}
-    container_name: php
-    restart: always
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./php/www:/var/www/html
     depends_on:
-      - mariadb
-    ports:
-      - 9000:9000
-    volumes:
-      - ./php/php.ini:/etc/php/8.1/fpm/php.ini
-      - ./php/www:/var/www/html
+      - db
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
     networks:
-      - internal
+      - lamp-network
 
-
-  mariadb:
-    image: mariadb:${MARIADB_IMAGE_TAG}
-    container_name: mariadb
-    restart: always
+  db:
+    image: mariadb:10.11-jammy
+    restart: unless-stopped
     environment:
-      - MARIADB_USER=${MARIADB_USER}
-      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: webapp
+      MYSQL_USER: webuser
+      MYSQL_PASSWORD: webpassword
     volumes:
-      - ./mariadb/my.cnf:/etc/mysql/my.cnf
-
-
-  nginx:
-    image: nginx:${NGINX_IMAGE_TAG}
-    container_name: nginx
-    restart: always
-    environment:
-      - NGINX_HOST=${NGINX_HOST}
-      - NGINX_PORT=${NGINX_PORT}
+      - db_data:/var/lib/mysql
+      - ./mariadb/conf.d:/etc/mysql/conf.d
     ports:
-      - 8090:80
-    links:
-      - php
-    volumes:
-      - ./php/www:/var/www/html
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/sites/:/etc/nginx/conf.d/
+      - "3306:3306"
     networks:
-      - internal
+      - lamp-network
+    command: >
+      --max_connections=20
+      --innodb_buffer_pool_size=64M
+      --innodb_log_file_size=32M
+      --query_cache_size=16M
+      --tmp_table_size=32M
+      --max_heap_table_size=32M
 
-
-  phpmyadmin:
-    image: phpmyadmin:${PHPMYADMIN_IMAGE_TAG}
-    container_name: phpmyadmin
-    restart: always
-    environment:
-      - PMA_HOST=${PMA_HOST}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    ports:
-      - 8080:80
-    volumes:
-      - ./phpmyadmin/config.inc.php:/etc/phpmyadmin/config.user.inc.php
-
+volumes:
+  db_data:
 
 networks:
-  internal:
+  lamp-network:
     driver: bridge
