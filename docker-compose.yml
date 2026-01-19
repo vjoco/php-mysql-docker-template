@@ -55,5 +55,4 @@ volumes:
 
 networks:
   easypanel-network:
-    name: easypanel-network
     external: true
