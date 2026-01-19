@@ -1,8 +1,8 @@
 services:
   web:
     build: .
-    ports:
-      - "8031:8031"
+ #   ports:
+ #     - "8031:8031"
     volumes:
       - ./php/www:/var/www/html
     depends_on:
@@ -24,8 +24,8 @@ services:
       - db_data:/var/lib/mysql
       - ./mariadb/conf.d:/etc/mysql/conf.d
       - ./mariadb/init:/docker-entrypoint-initdb.d
-    ports:
-      - "3317:3317"
+  #  ports:
+  #    - "3317:3317"
     networks:
       - lamp-network
     command: >
