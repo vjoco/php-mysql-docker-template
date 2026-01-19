@@ -1,5 +1,8 @@
 <?php
 
+echo 123;
+
+/*
 $host = 'db'; // The service name in docker-compose
 $db   = 'my_app_db';
 $user = 'admin';
@@ -12,5 +15,5 @@ try {
 } catch (PDOException $e) {
     echo "❌ Connection failed: " . $e->getMessage();
 }
-    
+*/  
 ?>
