@@ -17,10 +17,6 @@ services:
       timeout: 10s
       retries: 3
 
-    networks:
-      - default
-      - easypanel-network    
-
   db:
     image: mariadb:10.11-jammy
     restart: unless-stopped
@@ -47,12 +43,8 @@ services:
       --query_cache_size=16M
       --tmp_table_size=32M
       --max_heap_table_size=32M
-    networks:
-      - default
+
 
 volumes:
   db_data:
 
-networks:
-  easypanel-network:
-    driver: bridge
