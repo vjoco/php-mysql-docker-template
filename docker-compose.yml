@@ -1,8 +1,8 @@
 services:
   web:
     build: .
-    ports:
-      - 8011:8011
+#    ports:
+#      - 8031:8011
     volumes:
       - ./php/www:/var/www/html
     depends_on:
