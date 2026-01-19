@@ -21,6 +21,11 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - php-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   # Nginx Web Server
   nginx:
